@@ -60,12 +60,24 @@ vi2TT2u1izxfYb37vqCH2ALcmuY6dba2s9vPOaD0G6P0WLH7D7iMTA==
         stage('Deploy') {
              steps {
                 echo 'Deploying react app....'
-                script {
-                    // Copy the contents of the local build folder to the cPanel server
-                    sshagent(['ssh-credential-agent']) {
+                // script {
+                //     // Copy the contents of the local build folder to the cPanel server
+                //     sshagent(['ssh-credential-agent']) {
+                //         sh """
+                //             scp -o StrictHostKeyChecking=no \
+                //                 -i ${SSH_PRIVATE_KEY_PATH} \
+                //                 -P ${CPANEL_PORT} \
+                //                 -r ${LOCAL_BUILD_FOLDER}/* \
+                //                 ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/
+                //         """
+                //     }
+                // }
+                 script {
+                    // Use withCredentials to inject the SSH key
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credential-agent', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                         sh """
                             scp -o StrictHostKeyChecking=no \
-                                -i ${SSH_PRIVATE_KEY_PATH} \
+                                -i ${SSH_PRIVATE_KEY} \
                                 -P ${CPANEL_PORT} \
                                 -r ${LOCAL_BUILD_FOLDER}/* \
                                 ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/

@@ -3,6 +3,7 @@ pipeline {
     environment {
         CPANEL_HOST = 'wakra-lab.com'
         CPANEL_USER = 'wakralab'
+        CPANEL_PORT = '22'
         LOCAL_BUILD_FOLDER = 'build'
         REMOTE_COPANEL_PATH = '/public_html/myapp'
     }
@@ -30,16 +31,34 @@ pipeline {
                         // Set environment variable for the SSH private key
                         env.SSH_PRIVATE_KEY = credentials('ssh-credential-agent')
 
-                        // Use environment variable in the scp command
-                        sh """
-                            scp -o StrictHostKeyChecking=no \
-                                -i \${SSH_PRIVATE_KEY} \
-                                -r ${LOCAL_BUILD_FOLDER}/* \
-                                ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/
+                        // Create a temporary SSH configuration file
+                        def sshConfigFile = """Host ${CPANEL_HOST}
+                            HostName ${CPANEL_HOST}
+                            Port ${CPANEL_PORT}
+                            User ${CPANEL_USER}
+                            StrictHostKeyChecking no
+                            UserKnownHostsFile /dev/null
+                            PubkeyAcceptedKeyTypes +ssh-rsa
                         """
+
+                        // Write the configuration to a temporary file
+                        def configFile = writeTmpFile(sshConfigFile)
+
+                        // Use the temporary SSH configuration file in the scp command
+                        sh "scp -F ${configFile} -i \${SSH_PRIVATE_KEY} -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
+
+                        // Cleanup the temporary file
+                        sh "rm ${configFile}"
                     }
                 }
             }
         }
     }
+}
+
+def writeTmpFile(contents) {
+    def tmpFile = File.createTempFile("ssh-config", null)
+    tmpFile.text = contents
+    tmpFile.setExecutable(true)
+    return tmpFile
 }

@@ -44,6 +44,7 @@ pipeline {
                         def configFile = writeFile file: 'ssh-config', text: sshConfigFile
 
                         // Use the temporary SSH configuration file in the scp command
+                        // Use the temporary SSH configuration file in the scp command
                         sh "scp -F ${configFile} -i \${SSH_PRIVATE_KEY} -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
                     }
                 }

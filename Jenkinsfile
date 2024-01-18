@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         // Define your cPanel server details
+        // Define your cPanel server details
         CPANEL_HOST = 'your-cpanel-server.com'
         CPANEL_USER = 'your-ssh-username'
         CPANEL_PORT = '22' // Change this if your SSH server uses a different port

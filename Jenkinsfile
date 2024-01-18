@@ -3,8 +3,8 @@ pipeline {
     environment {
         // Define your cPanel server details
         // Define your cPanel server details
-        CPANEL_HOST = 'your-cpanel-server.com'
-        CPANEL_USER = 'your-ssh-username'
+        CPANEL_HOST = 'wakra-lab.com'
+        CPANEL_USER = 'wakralab'
         CPANEL_PORT = '22' // Change this if your SSH server uses a different port
         SSH_PRIVATE_KEY_PATH = 'D:/wakra-lab-ssh/wakralabssh' // Update this to your local SSH private key path
         LOCAL_BUILD_FOLDER = 'build'

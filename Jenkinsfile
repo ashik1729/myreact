@@ -23,15 +23,16 @@ pipeline {
             }
         }
         stage('Deploy') {
+         echo 'Deploying.......'
+
             steps {
-                echo 'Deploying react app....'
                 script {
                     // Use withCredentials to inject the SSH key
                     withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credential-agent', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                         // Set environment variable for the SSH private key
                         env.SSH_PRIVATE_KEY = credentials('ssh-credential-agent')
 
-                        // Create a temporary SSH configuration file
+                        // Create a temporary SSH configuration file using writeFile
                         def sshConfigFile = """Host ${CPANEL_HOST}
                             HostName ${CPANEL_HOST}
                             Port ${CPANEL_PORT}
@@ -40,25 +41,13 @@ pipeline {
                             UserKnownHostsFile /dev/null
                             PubkeyAcceptedKeyTypes +ssh-rsa
                         """
-
-                        // Write the configuration to a temporary file
-                        def configFile = writeTmpFile(sshConfigFile)
+                        def configFile = writeFile file: 'ssh-config', text: sshConfigFile
 
                         // Use the temporary SSH configuration file in the scp command
                         sh "scp -F ${configFile} -i \${SSH_PRIVATE_KEY} -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
-
-                        // Cleanup the temporary file
-                        sh "rm ${configFile}"
                     }
                 }
             }
         }
     }
-}
-
-def writeTmpFile(contents) {
-    def tmpFile = File.createTempFile("ssh-config", null)
-    tmpFile.text = contents
-    tmpFile.setExecutable(true)
-    return tmpFile
 }

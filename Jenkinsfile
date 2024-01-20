@@ -30,7 +30,7 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credential-agent', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                         // Set environment variable for the SSH private key
                         env.SSH_PRIVATE_KEY = credentials('ssh-credential-agent')
-                        sh "ls"
+                        sh "ls -a"
 
 //                         sh "echo 'Private key is : ${env.SSH_PRIVATE_KEY}'"
 //                         // Create a temporary SSH configuration file using writeFile

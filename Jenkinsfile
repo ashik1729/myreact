@@ -31,12 +31,16 @@ pipeline {
                         // Set environment variable for the SSH private key
                         env.SSH_PRIVATE_KEY = credentials('ssh-credential-agent')
 
+                        sh "echo 'Private key is : ${env.SSH_PRIVATE_KEY}'"
                         // Create a temporary SSH configuration file using writeFile
-                        def sshConfigFile = """Host ${CPANEL_HOST}
-                            HostName ${CPANEL_HOST}
-                            Port ${CPANEL_PORT}
-                            User ${CPANEL_USER}
-                        """
+                       def sshConfigFile = """Host ${CPANEL_HOST}
+    HostName ${CPANEL_HOST}
+    Port ${CPANEL_PORT}
+    User ${CPANEL_USER}
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    PubkeyAcceptedKeyTypes +ssh-rsa
+"""
                         def configFile = writeFile file: 'ssh-config', text: sshConfigFile
                         sh "echo 'SSH Config File Content: ${sshConfigFile}'"
                         sh "echo 'SSH Private Key: \${SSH_PRIVATE_KEY}'"

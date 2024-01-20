@@ -23,9 +23,8 @@ pipeline {
             }
         }
         stage('Deploy') {
-         echo 'Deploying.......'
-
             steps {
+                echo 'Deploying.......'
                 script {
                     // Use withCredentials to inject the SSH key
                     withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credential-agent', keyFileVariable: 'SSH_PRIVATE_KEY')]) {

@@ -12,17 +12,17 @@ pipeline {
         pollSCM('H/2 * * * *')
     }
     stages {
-        stage('Build') {
-            steps {
-                sh 'npm install'
-                sh 'npm run build'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'testing react app..'
-            }
-        }
+        // stage('Build') {
+        //     steps {
+        //         sh 'npm install'
+        //         sh 'npm run build'
+        //     }
+        // }
+        // stage('Test') {
+        //     steps {
+        //         echo 'testing react app..'
+        //     }
+        // }
         stage('Deploy') {
             steps {
                 script {

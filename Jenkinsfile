@@ -32,22 +32,21 @@ pipeline {
                         env.SSH_PRIVATE_KEY = credentials('ssh-credential-agent')
                         sh "ls -a"
 
-//                         sh "echo 'Private key is : ${env.SSH_PRIVATE_KEY}'"
-//                         // Create a temporary SSH configuration file using writeFile
-//                        def sshConfigFile = """Host ${CPANEL_HOST}
-//     HostName ${CPANEL_HOST}
-//     Port ${CPANEL_PORT}
-//     User ${CPANEL_USER}
-//     StrictHostKeyChecking no
-//     UserKnownHostsFile /dev/null
-//     PubkeyAcceptedKeyTypes +ssh-rsa
-// """
-//                         def configFile = writeFile file: 'ssh-config', text: sshConfigFile
-//                         sh "echo 'SSH Config File Content: ${sshConfigFile}'"
-//                         sh "echo 'SSH Private Key: \${SSH_PRIVATE_KEY}'"
-//                         sh "ssh -i \${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no ${CPANEL_USER}@${CPANEL_HOST} 'hostname'"
-//                         sh "scp -i \${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
-//                         sh "echo 'Deployment completed'"
+                        // Create a temporary SSH configuration file using writeFile
+                       def sshConfigFile = """Host ${CPANEL_HOST}
+    HostName ${CPANEL_HOST}
+    Port ${CPANEL_PORT}
+    User ${CPANEL_USER}
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    PubkeyAcceptedKeyTypes +ssh-rsa
+"""
+                        def configFile = writeFile file: 'ssh-config', text: sshConfigFile
+                        sh "echo 'SSH Config File Content: ${sshConfigFile}'"
+                        sh "echo 'SSH Private Key: \${SSH_PRIVATE_KEY}'"
+                        sh "ssh -i \${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no ${CPANEL_USER}@${CPANEL_HOST} 'hostname'"
+                        sh "scp -i \${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
+                        sh "echo 'Deployment completed'"
                     }
                 }
             }

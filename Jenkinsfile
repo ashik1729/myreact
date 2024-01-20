@@ -4,6 +4,8 @@ pipeline {
         CPANEL_HOST = 'wakra-lab.com'
         CPANEL_USER = 'wakralab'
         CPANEL_PORT = '22'
+        LOCAL_BUILD_FOLDER = 'build'
+        REMOTE_COPANEL_PATH = '/public_html/myapp'
     }
     triggers {
         pollSCM('*/2 * * * *')
@@ -21,8 +23,9 @@ pipeline {
             }
         }
         stage('Deploy') {
+
             steps {
-                echo 'Deploying.......'
+         echo 'Deploying.......'
                 script {
                     // Use withCredentials to inject the SSH key
                     withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credential-agent', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
@@ -30,8 +33,7 @@ pipeline {
                         env.SSH_PRIVATE_KEY = credentials('ssh-credential-agent')
 
                         // Create a temporary SSH configuration file using writeFile
-                        def sshConfigFile = """
-                            Host ${CPANEL_HOST}
+                        def sshConfigFile = """Host ${CPANEL_HOST}
                             HostName ${CPANEL_HOST}
                             Port ${CPANEL_PORT}
                             User ${CPANEL_USER}
@@ -41,21 +43,10 @@ pipeline {
                         """
                         def configFile = writeFile file: 'ssh-config', text: sshConfigFile
 
-                        // Echo a message indicating that the SSH connection has been established
-                        echo 'SSH connection established'
-
-                        // Use the temporary SSH configuration file in the ssh command
-                        sh "scp -F ${configFile} -i \${SSH_PRIVATE_KEY} ${configFile} ${CPANEL_USER}@${CPANEL_HOST}:~/"
-                        sh "ssh -F ${configFile} -i \${SSH_PRIVATE_KEY} ${CPANEL_USER}@${CPANEL_HOST} 'ls -l'"
+                        // Use the temporary SSH configuration file in the scp command
+                        // Use the temporary SSH configuration file in the scp command
+                        sh "scp -F ${configFile} -i \${SSH_PRIVATE_KEY} -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
                     }
-                }
-            }
-        }
-        stage('Manual Deploy Approval') {
-            steps {
-                script {
-                    // Use input to wait for manual approval before proceeding with deployment
-                    input("Do you want to deploy to production?")
                 }
             }
         }

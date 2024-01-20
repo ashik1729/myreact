@@ -30,7 +30,8 @@ pipeline {
                         env.SSH_PRIVATE_KEY = credentials('ssh-credential-agent')
 
                         // Create a temporary SSH configuration file using writeFile
-                        def sshConfigFile = """Host ${CPANEL_HOST}
+                        def sshConfigFile = """
+                            Host ${CPANEL_HOST}
                             HostName ${CPANEL_HOST}
                             Port ${CPANEL_PORT}
                             User ${CPANEL_USER}
@@ -44,8 +45,17 @@ pipeline {
                         echo 'SSH connection established'
 
                         // Use the temporary SSH configuration file in the ssh command
+                        sh "scp -F ${configFile} -i \${SSH_PRIVATE_KEY} ${configFile} ${CPANEL_USER}@${CPANEL_HOST}:~/"
                         sh "ssh -F ${configFile} -i \${SSH_PRIVATE_KEY} ${CPANEL_USER}@${CPANEL_HOST} 'ls -l'"
                     }
+                }
+            }
+        }
+        stage('Manual Deploy Approval') {
+            steps {
+                script {
+                    // Use input to wait for manual approval before proceeding with deployment
+                    input("Do you want to deploy to production?")
                 }
             }
         }

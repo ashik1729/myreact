@@ -38,9 +38,11 @@ pipeline {
                             User ${CPANEL_USER}
                         """
                         def configFile = writeFile file: 'ssh-config', text: sshConfigFile
-
-                        // Use the temporary SSH configuration file in the scp command
-                        sh "scp -i \${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no -F ${configFile} -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
+                        sh "echo 'SSH Config File Content: ${sshConfigFile}'"
+                        sh "echo 'SSH Private Key: \${SSH_PRIVATE_KEY}'"
+                        sh "ssh -i \${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no ${CPANEL_USER}@${CPANEL_HOST} 'hostname'"
+                        sh "scp -i \${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
+                        sh "echo 'Deployment completed'"
                     }
                 }
             }

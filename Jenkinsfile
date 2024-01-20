@@ -29,7 +29,7 @@ pipeline {
                     // Use the sshagent step to handle SSH authentication
                     sshagent(credentials: [SSH_CREDENTIALS]) {
                         // Execute SSH commands on the remote server
-                        sh "ssh ${REMOTE_USERNAME}@${REMOTE_SERVER} ${REMOTE_COMMAND}"
+                        sh "ssh -i D:\wakra-lab-ssh/wakralabssh wakralab@wakra-lab.com ${REMOTE_COMMAND}"
                     }
                 }
             }

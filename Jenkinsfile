@@ -30,7 +30,7 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credential-agent', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                         // Set environment variable for the SSH private key
                         env.SSH_PRIVATE_KEY = credentials('ssh-credential-agent')
-                        sh "ls -a"
+                        sh "ls"
 
                         // Create a temporary SSH configuration file using writeFile
                        def sshConfigFile = """Host ${CPANEL_HOST}

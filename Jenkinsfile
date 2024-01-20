@@ -4,8 +4,6 @@ pipeline {
         CPANEL_HOST = 'wakra-lab.com'
         CPANEL_USER = 'wakralab'
         CPANEL_PORT = '22'
-        LOCAL_BUILD_FOLDER = 'build'
-        REMOTE_COPANEL_PATH = '/public_html/myapp'
     }
     triggers {
         pollSCM('*/2 * * * *')
@@ -42,9 +40,11 @@ pipeline {
                         """
                         def configFile = writeFile file: 'ssh-config', text: sshConfigFile
 
-                        // Use the temporary SSH configuration file in the scp command
-                        // Use the temporary SSH configuration file in the scp command
-                        sh "scp -F ${configFile} -i \${SSH_PRIVATE_KEY} -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
+                        // Echo a message indicating that the SSH connection has been established
+                        echo 'SSH connection established'
+
+                        // Use the temporary SSH configuration file in the ssh command
+                        sh "ssh -F ${configFile} -i \${SSH_PRIVATE_KEY} ${CPANEL_USER}@${CPANEL_HOST} 'ls -l'"
                     }
                 }
             }

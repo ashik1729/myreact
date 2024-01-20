@@ -1,12 +1,5 @@
 pipeline {
     agent any
-    environment {
-        CPANEL_HOST = 'wakra-lab.com'
-        CPANEL_USER = 'wakralab'
-        CPANEL_PORT = '22'
-        LOCAL_BUILD_FOLDER = 'build'
-        REMOTE_COPANEL_PATH = '/public_html/myapp'
-    }
      environment {
         // Define SSH credentials ID (you should create SSH credentials in Jenkins)
         SSH_CREDENTIALS = 'ssh-credential-agent'

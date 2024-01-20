@@ -19,20 +19,21 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo 'Testing React app...'
+                echo 'testing react app..'
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying...'
+                echo 'Deploying.......'
                 script {
                     // Use withCredentials to inject the SSH key
                     withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credential-agent', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                         // Set environment variable for the SSH private key
                         env.SSH_PRIVATE_KEY = credentials('ssh-credential-agent')
-                        
+                        sh "ls"
+
                         // Create a temporary SSH configuration file using writeFile
-                        def sshConfigFile = """Host ${CPANEL_HOST}
+                       def sshConfigFile = """Host ${CPANEL_HOST}
     HostName ${CPANEL_HOST}
     Port ${CPANEL_PORT}
     User ${CPANEL_USER}
@@ -40,7 +41,7 @@ pipeline {
     UserKnownHostsFile /dev/null
     PubkeyAcceptedKeyTypes +ssh-rsa
 """
-                        def configFile = writeFile file: 'ssh-config', text: sshConfigFile
+                                               def configFile = writeFile file: 'ssh-config', text: sshConfigFile
                         echo "SSH Config File Content: ${sshConfigFile}"
                         echo "SSH Private Key: ${SSH_PRIVATE_KEY}"
 
@@ -59,9 +60,13 @@ pipeline {
                         // Continue with deployment steps
                         sh "scp -i ${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
                         echo 'Deployment completed'
+
                     }
                 }
             }
         }
+
     }
 }
+
+

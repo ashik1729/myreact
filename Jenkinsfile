@@ -23,9 +23,8 @@ pipeline {
             }
         }
         stage('Deploy') {
-
             steps {
-         echo 'Deploying.......'
+                echo 'Deploying.......'
                 script {
                     // Use withCredentials to inject the SSH key
                     withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credential-agent', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
@@ -33,20 +32,21 @@ pipeline {
                         env.SSH_PRIVATE_KEY = credentials('ssh-credential-agent')
 
                         // Create a temporary SSH configuration file using writeFile
-                       def sshConfigFile = """Host ${CPANEL_HOST}
+                        def sshConfigFile = """Host ${CPANEL_HOST}
                             HostName ${CPANEL_HOST}
                             Port ${CPANEL_PORT}
                             User ${CPANEL_USER}
                         """
-
                         def configFile = writeFile file: 'ssh-config', text: sshConfigFile
-                        sh 'chmod 600 ${SSH_PRIVATE_KEY}'
+
                         // Use the temporary SSH configuration file in the scp command
-                        // Use the temporary SSH configuration file in the scp command
-                        sh "scp -F ${configFile} -i \${SSH_PRIVATE_KEY} -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
+                        sh "scp -i \${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no -F ${configFile} -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"
                     }
                 }
             }
         }
+
     }
 }
+
+

@@ -33,16 +33,14 @@ pipeline {
                         env.SSH_PRIVATE_KEY = credentials('ssh-credential-agent')
 
                         // Create a temporary SSH configuration file using writeFile
-                        def sshConfigFile = """Host ${CPANEL_HOST}
+                       def sshConfigFile = """Host ${CPANEL_HOST}
                             HostName ${CPANEL_HOST}
                             Port ${CPANEL_PORT}
                             User ${CPANEL_USER}
-                            StrictHostKeyChecking no
-                            UserKnownHostsFile /dev/null
-                            PubkeyAcceptedKeyTypes +ssh-rsa
                         """
-                        def configFile = writeFile file: 'ssh-config', text: sshConfigFile
 
+                        def configFile = writeFile file: 'ssh-config', text: sshConfigFile
+                        sh 'chmod 600 ${SSH_PRIVATE_KEY}'
                         // Use the temporary SSH configuration file in the scp command
                         // Use the temporary SSH configuration file in the scp command
                         sh "scp -F ${configFile} -i \${SSH_PRIVATE_KEY} -r ${LOCAL_BUILD_FOLDER}/* ${CPANEL_USER}@${CPANEL_HOST}:${REMOTE_COPANEL_PATH}/"

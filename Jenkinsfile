@@ -34,7 +34,8 @@ pipeline {
 //sh 'ssh -v -i "D:/wakra-lab-ssh/wakralabssh" wakralab@wakra-lab.com "${REMOTE_COMMAND}"'
             //    sh 'ssh -i "D:/wakra-lab-ssh/wakralabssh" -oHostKeyAlgorithms=ssh-rsa wakralab@wakra-lab.com "${REMOTE_COMMAND}"'
                       //  sh "ssh -oHostKeyAlgorithms=ssh-rsa ${REMOTE_USERNAME}@${REMOTE_SERVER} '${REMOTE_COMMAND}'"
-sh 'ssh -i "D:\\wakra-lab-ssh\\wakralabssh" -oHostKeyAlgorithms=ssh-rsa wakralab@wakra-lab.com "${REMOTE_COMMAND}"'
+//sh 'ssh -i "D:\\wakra-lab-ssh\\wakralabssh" -oHostKeyAlgorithms=ssh-rsa wakralab@wakra-lab.com "${REMOTE_COMMAND}"'
+        sh 'ssh -v -i "D:\\wakra-lab-ssh\\wakralabssh" -oHostKeyAlgorithms=ssh-rsa wakralab@wakra-lab.com "${REMOTE_COMMAND}"'
 
 
                     }

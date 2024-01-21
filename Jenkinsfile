@@ -2,7 +2,12 @@ pipeline {
     agent any
     environment {
         // ... (other environment variables)
-
+    // Define SSH credentials ID (you should create SSH credentials in Jenkins)
+        SSH_CREDENTIALS = 'ssh-credential-agent'
+        // Define the remote server details
+        REMOTE_SERVER = 'wakra-lab.com'
+        REMOTE_USERNAME = 'wakralab'
+        REMOTE_COMMAND = 'ls' // Change this to the command you want to execute on the remote server
         PRIVATE_KEY_CONTENT = """-----BEGIN RSA PRIVATE KEY-----
 MIIEoAIBAAKCAQEA4cTn9GSZ2EQyBCwhbgG4H/WiZShvNbmBFX92kYQilJkqYGoU
 hdilnv1s5brAvKV4/y8fBk091Uhi3wvDrYsFC3mf3erxVBzZUNvdjTyNhjSFYguX

@@ -16,7 +16,7 @@ pipeline {
                 script {
                     // Use the sshagent step to handle SSH authentication
                     sshagent(credentials: [SSH_CREDENTIALS]) {
-                        sh 'ssh -oHostKeyAlgorithms=ssh-rsa -l wakralab wakra-lab.com "${REMOTE_COMMAND}"'
+                        sh 'ssh -v -oHostKeyAlgorithms=ssh-rsa -l wakralab wakra-lab.com "${REMOTE_COMMAND}"'
                     }
                 }
             }

@@ -1,13 +1,11 @@
 pipeline {
     agent any
     environment {
-        // ... (other environment variables)
-    // Define SSH credentials ID (you should create SSH credentials in Jenkins)
-        SSH_CREDENTIALS = 'ssh-credential-agent'
-        // Define the remote server details
+        SSH_CREDENTIALS = 'wakralabssh' // Update with your actual SSH credentials ID
         REMOTE_SERVER = 'wakra-lab.com'
         REMOTE_USERNAME = 'wakralab'
         REMOTE_COMMAND = 'ls' // Change this to the command you want to execute on the remote server
+
         PRIVATE_KEY_CONTENT = """-----BEGIN RSA PRIVATE KEY-----
 MIIEoAIBAAKCAQEA4cTn9GSZ2EQyBCwhbgG4H/WiZShvNbmBFX92kYQilJkqYGoU
 hdilnv1s5brAvKV4/y8fBk091Uhi3wvDrYsFC3mf3erxVBzZUNvdjTyNhjSFYguX
@@ -47,7 +45,9 @@ W2mXq0tYCYt5mZk4qlAZB7lNV/yOktL9cBjs/kpaZr0SFa1d
                     // Use the sshagent step to handle SSH authentication
                     sshagent(credentials: [SSH_CREDENTIALS]) {
                         // Execute SSH commands on the remote server
-                        sh 'ssh -i private_key.pem -oHostKeyAlgorithms=ssh-rsa ${REMOTE_USERNAME}@${REMOTE_SERVER} "${REMOTE_COMMAND}"'
+                        script {
+                            sh 'ssh -i private_key.pem -oHostKeyAlgorithms=+ssh-rsa ${REMOTE_USERNAME}@${REMOTE_SERVER} "${REMOTE_COMMAND}"'
+                        }
                     }
                 }
             }

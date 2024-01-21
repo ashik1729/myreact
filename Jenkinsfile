@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        SSH_CREDENTIALS = 'wakralabssh' // Update with your actual SSH credentials ID
+        SSH_CREDENTIALS = 'ssh-credential-agent'
         REMOTE_SERVER = 'wakra-lab.com'
         REMOTE_USERNAME = 'wakralab'
         REMOTE_COMMAND = 'ls' // Change this to the command you want to execute on the remote server

@@ -30,10 +30,10 @@ pipeline {
                     sshagent(credentials: [SSH_CREDENTIALS]) {
                         // Execute SSH commands on the remote server
                     //  sh 'ssh -i "D:/wakra-lab-ssh/wakralabssh" wakralab@wakra-lab.com "${REMOTE_COMMAND}"'
-                                      //sh 'ssh -i "D:\wakra-lab-ssh\wakralabssh" -oHostKeyAlgorithms=ssh-rsa wakralab@wakra-lab.com "${REMOTE_COMMAND}"'
+                                      sh 'ssh -i "private_key.pem" -oHostKeyAlgorithms=ssh-rsa wakralab@wakra-lab.com "${REMOTE_COMMAND}"'
 //sh 'ssh -v -i "D:/wakra-lab-ssh/wakralabssh" wakralab@wakra-lab.com "${REMOTE_COMMAND}"'
               //  sh 'ssh -i "D:/wakra-lab-ssh/wakralabssh" -oHostKeyAlgorithms=ssh-rsa wakralab@wakra-lab.com "${REMOTE_COMMAND}"'
-sh 'ls'
+//sh 'ls'
 
                     }
                 }

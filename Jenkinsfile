@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         // Use the credential ID for SSH private key
-        SSH_CREDENTIALS = credentials('ssh-credential-agent')
+        SSH_CREDENTIALS = 'ssh-credential-agent'
         REMOTE_SERVER = 'wakra-lab.com'
         REMOTE_USERNAME = 'wakralab'
         REMOTE_COMMAND = 'ls'

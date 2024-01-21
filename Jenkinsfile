@@ -1,14 +1,9 @@
 pipeline {
     agent any
     environment {
-        // Define SSH credentials ID (you should create SSH credentials in Jenkins)
-        SSH_CREDENTIALS = 'ssh-credential-agent'
-        // Define the remote server details
-        REMOTE_SERVER = 'wakra-lab.com'
-        REMOTE_USERNAME = 'wakralab'
-        REMOTE_COMMAND = 'ls' // Change this to the command you want to execute on the remote server
-        PRIVATE_KEY_CONTENT = '''
------BEGIN RSA PRIVATE KEY-----
+        // ... (other environment variables)
+
+        PRIVATE_KEY_CONTENT = """-----BEGIN RSA PRIVATE KEY-----
 MIIEoAIBAAKCAQEA4cTn9GSZ2EQyBCwhbgG4H/WiZShvNbmBFX92kYQilJkqYGoU
 hdilnv1s5brAvKV4/y8fBk091Uhi3wvDrYsFC3mf3erxVBzZUNvdjTyNhjSFYguX
 KQHpdxuSQFidwcVUPbNSnAwkLQ06nXlzaiCSrlLlSRD6KVYm6Ocl5LJdwhVvktqo
@@ -34,23 +29,20 @@ cc6khspU9CFksxQdt4XLlPvTkIqRkXMi0Kf8yMNuX18cmXGZ5Q7Qs30N600wprn0
 3wKBgFrhxfrln+qDztbH4LqB40gU3jOFKxmZOG0cJGdJ4ZMKxm2/EakKv6Zh4mRX
 dQeEtARdZ48xk0p0BZi6Ke1GZYzfG1nxygSjNGDA9ClM4oDnr7CBcBbGepQQtMLe
 W2mXq0tYCYt5mZk4qlAZB7lNV/yOktL9cBjs/kpaZr0SFa1d
------END RSA PRIVATE KEY-----
-'''
-    }
-    triggers {
-        pollSCM('H/2 * * * *')
+-----END RSA PRIVATE KEY-----"""
     }
     stages {
         stage('Deploy') {
             steps {
                 script {
+                    // Save private key to a file with restricted permissions
+                    writeFile file: 'private_key.pem', text: PRIVATE_KEY_CONTENT
+                    sh 'chmod 600 private_key.pem'
+
                     // Use the sshagent step to handle SSH authentication
                     sshagent(credentials: [SSH_CREDENTIALS]) {
                         // Execute SSH commands on the remote server
-                       sh """
-    echo "${PRIVATE_KEY_CONTENT}" > private_key.pem
-    ssh -i private_key.pem -oHostKeyAlgorithms=ssh-rsa ${REMOTE_USERNAME}@${REMOTE_SERVER} "${REMOTE_COMMAND}"
-"""
+                        sh 'ssh -i private_key.pem -oHostKeyAlgorithms=ssh-rsa ${REMOTE_USERNAME}@${REMOTE_SERVER} "${REMOTE_COMMAND}"'
                     }
                 }
             }

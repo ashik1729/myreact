@@ -47,10 +47,10 @@ W2mXq0tYCYt5mZk4qlAZB7lNV/yOktL9cBjs/kpaZr0SFa1d
                     // Use the sshagent step to handle SSH authentication
                     sshagent(credentials: [SSH_CREDENTIALS]) {
                         // Execute SSH commands on the remote server
-                        sh """
-                            echo "${PRIVATE_KEY_CONTENT}" > private_key.pem
-                            ssh -i private_key.pem ${REMOTE_USERNAME}@${REMOTE_SERVER} "${REMOTE_COMMAND}"
-                        """
+                       sh """
+    echo "${PRIVATE_KEY_CONTENT}" > private_key.pem
+    ssh -i private_key.pem -oHostKeyAlgorithms=ssh-rsa ${REMOTE_USERNAME}@${REMOTE_SERVER} "${REMOTE_COMMAND}"
+"""
                     }
                 }
             }

@@ -14,7 +14,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: SSH_CREDENTIALS, keyFileVariable: 'keyfile')]) {
-                        sh "ssh -i ${keyfile} ${REMOTE_USERNAME}@${REMOTE_SERVER} ${REMOTE_COMMAND}"
+                      //  sh "ssh -i ${keyfile} ${REMOTE_USERNAME}@${REMOTE_SERVER} ${REMOTE_COMMAND}"
+                      sh "ssh -oHostKeyAlgorithms=+ssh-rsa -i ${keyfile} wakralab@wakra-lab.com ls"
+
                     }
                 }
             }

@@ -1,11 +1,10 @@
 pipeline {
     agent any
     environment {
-        // Use the credential ID for SSH private key
         SSH_CREDENTIALS = 'ssh-credential-agent'
         REMOTE_SERVER = 'wakra-lab.com'
         REMOTE_USERNAME = 'wakralab'
-        REMOTE_COMMAND = 'ls'
+        REMOTE_COMMAND = 'ls'  // Customize for specific deployment tasks
     }
     triggers {
         pollSCM('H/2 * * * *')
@@ -14,9 +13,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Use the sshagent step to handle SSH authentication
-                    sshagent(credentials: [SSH_CREDENTIALS]) {
-                        sh 'ssh -v -oHostKeyAlgorithms=ssh-rsa -l wakralab wakra-lab.com "${REMOTE_COMMAND}"'
+                    withCredentials([sshUserPrivateKey(credentialsId: SSH_CREDENTIALS, keyFileVariable: 'keyfile')]) {
+                        sh "ssh -i ${keyfile} ${REMOTE_USERNAME}@${REMOTE_SERVER} ${REMOTE_COMMAND}"
                     }
                 }
             }
